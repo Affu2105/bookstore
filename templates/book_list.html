@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+        .content {
+            flex: 1;
+        }
+        .navbar {
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        .navbar-dark .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 500;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        .navbar-dark .navbar-nav .nav-link:hover {
+            color: #fff;
+            transform: translateY(-2px);
+        }
+        .page-header {
+            background: linear-gradient(135deg, #6c63ff, #3a3597);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            height: 100%;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        .card img {
+            height: 250px;
+            object-fit: cover;
+            transition: all 0.5s ease;
+        }
+        .card:hover img {
+            transform: scale(1.05);
+        }
+        .card-body {
+            padding: 1.5rem;
+        }
+        .card-title {
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: #2d2d2d;
+        }
+        .card-text {
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+        .btn-primary {
+            background-color: #6c63ff;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #5449e8;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.4);
+        }
+        .search-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+        .form-control, .form-select {
+            border: 1px solid #e1e1e1;
+            border-radius: 50px;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            box-shadow: none;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #6c63ff;
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.25);
+        }
+        .search-icon {
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c63ff;
+        }
+        .category-badge {
+            background: #e9ecef;
+            color: #555;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 0.75rem;
+        }
+        .price-tag {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #6c63ff;
+            margin-bottom: 1rem;
+        }
+        footer {
+            background: #212529;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            width: 100%;
+            margin-top: 3rem;
+        }
+        .no-books {
+            background: white;
+            padding: 3rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <i class="bi bi-book me-2"></i>Online Bookstore
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="{% url 'home' %}"><i class="bi bi-house-door me-1"></i>Home</a></li>
+                <li class="nav-item"><a class="nav-link active" href="{% url 'book_list' %}"><i class="bi bi-collection me-1"></i>Books</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'add_book' %}"><i class="bi bi-plus-circle me-1"></i>Add Book</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container text-center">
+        <h1>Explore Our Collection</h1>
+        <p class="lead">Discover the perfect book for your next reading adventure</p>
+    </div>
+</div>
+
+<!-- Search & Filter -->
+<div class="container">
+    <div class="search-container">
+        <div class="row g-3">
+            <div class="col-md-6 position-relative">
+                <label for="search" class="form-label">Search Books</label>
+                <input type="text" id="search" class="form-control" placeholder="Search by title or author...">
+                <i class="bi bi-search search-icon"></i>
+            </div>
+            <div class="col-md-6">
+                <label for="categoryFilter" class="form-label">Filter by Category</label>
+                <select id="categoryFilter" class="form-select">
+                    <option value="">All Categories</option>
+                    {% for book in books %}
+                        <option value="{{ book.category }}">{{ book.category }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Book Cards -->
+    <div class="row" id="bookContainer">
+        {% for book in books %}
+        <div class="col-md-4 book-card" data-title="{{ book.title }}" data-author="{{ book.author }}" data-category="{{ book.category }}">
+            <div class="card mb-4">
+                <img src="{{ book.get_image_url }}" class="card-img-top" alt="{{ book.title }}">
+                <div class="card-body">
+                    <span class="category-badge">{{ book.category }}</span>
+                    <h5 class="card-title">{{ book.title }}</h5>
+                    <p class="card-text"><i class="bi bi-person-fill me-2"></i>{{ book.author }}</p>
+                    <div class="price-tag"><i class="bi bi-tag-fill me-2"></i>${{ book.price }}</div>
+                    <a href="{% url 'book_detail' book.id %}" class="btn btn-primary w-100">
+                        <i class="bi bi-eye me-2"></i>View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="no-books">
+                <i class="bi bi-emoji-frown" style="font-size: 3rem; color: #6c63ff;"></i>
+                <h3 class="mt-3">No books available</h3>
+                <p class="text-muted">Check back later or add a new book to our collection.</p>
+                <a href="{% url 'add_book' %}" class="btn btn-primary mt-2">
+                    <i class="bi bi-plus-circle me-2"></i>Add a Book
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <p><i class="bi bi-book me-2"></i>&copy; 2025 Online Bookstore. All Rights Reserved.</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById("search").addEventListener("input", function () {
+        let searchValue = this.value.toLowerCase();
+        let books = document.querySelectorAll(".book-card");
+        
+        books.forEach(book => {
+            let title = book.getAttribute("data-title").toLowerCase();
+            let author = book.getAttribute("data-author").toLowerCase();
+            book.style.display = (title.includes(searchValue) || author.includes(searchValue)) ? "block" : "none";
+        });
+    });
+
+    document.getElementById("categoryFilter").addEventListener("change", function () {
+        let selectedCategory = this.value.toLowerCase();
+        let books = document.querySelectorAll(".book-card");
+        
+        books.forEach(book => {
+            let category = book.getAttribute("data-category").toLowerCase();
+            book.style.display = (selectedCategory === "" || category === selectedCategory) ? "block" : "none";
+        });
+    });
+</script>
+
+</body>
+</html>
